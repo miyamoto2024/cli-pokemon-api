@@ -9,7 +9,7 @@ import (
 
 type CRUDRegistory interface {
 	PokemonRepo() repository.PokemonRepository
-	PokemonCRUDUsecase() usecase.PokemonDataCRUDUsecaseInterface
+	PokemonCRUDUsecase() usecase.PokemonDataOperationUsecaseInterface
 }
 type crudRegistory struct {
 	db *gorm.DB
@@ -21,8 +21,8 @@ func NewCRUDRegistory(db *gorm.DB) CRUDRegistory {
 func (r *crudRegistory) PokemonRepo() repository.PokemonRepository {
 	return infrastructure.NewPokemonRepository(r.db)
 }
-func (r *crudRegistory) PokemonCRUDUsecase() usecase.PokemonDataCRUDUsecaseInterface {
-	return usecase.NewPokemonDataCRUDUsecase(r.PokemonRepo())
+func (r *crudRegistory) PokemonCRUDUsecase() usecase.PokemonDataOperationUsecaseInterface {
+	return usecase.NewPokemonDataOperationUsecase(r.PokemonRepo())
 }
 
 type FetchRegistory interface {

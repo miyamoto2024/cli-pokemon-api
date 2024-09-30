@@ -5,7 +5,7 @@ import (
 	"github.com/miyamoto2024/cli-pokemon-api/domain/repository"
 )
 
-type PokemonDataCRUDUsecaseInterface interface {
+type PokemonDataOperationUsecaseInterface interface {
 	GetAllPokemons() ([]model.Pokemon, error)
 	SavePokemon(pokemon model.Pokemon) error
 	DeletePokemon(id int) error
@@ -14,7 +14,7 @@ type pokemonDataCRUDUsecase struct {
 	repo repository.PokemonRepository
 }
 
-func NewPokemonDataCRUDUsecase(repo repository.PokemonRepository) PokemonDataCRUDUsecaseInterface {
+func NewPokemonDataOperationUsecase(repo repository.PokemonRepository) PokemonDataOperationUsecaseInterface {
 	return &pokemonDataCRUDUsecase{repo: repo}
 }
 func (pu *pokemonDataCRUDUsecase) GetAllPokemons() ([]model.Pokemon, error) {
@@ -27,7 +27,7 @@ func (pu *pokemonDataCRUDUsecase) DeletePokemon(id int) error {
 	return pu.repo.Delete(id)
 }
 
-// 外部APIからデータを取得するusecase
+// 外部APIを利用する場合
 type PokemonDataFetachUsecaseInterface interface {
 	FetchPokemon() (model.Pokemon, error)
 }

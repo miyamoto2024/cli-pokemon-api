@@ -22,8 +22,8 @@ func (r *pokemonRepository) GetAll() ([]model.Pokemon, error) {
 	return pokemons, nil
 }
 
-func (r *pokemonRepository) Save(pokemon model.Pokemon) error {
-	if err := r.db.Save(&pokemon).Error; err != nil {
+func (r *pokemonRepository) Create(pokemon model.Pokemon) error {
+	if err := r.db.Create(&pokemon).Error; err != nil {
 		return err
 	}
 	return nil

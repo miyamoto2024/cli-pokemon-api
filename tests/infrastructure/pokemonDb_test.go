@@ -35,7 +35,7 @@ func TestNewPokemonRepository(t *testing.T) {
 	assert.Implements(t, (*repository.PokemonRepository)(nil), repo)
 }
 
-// PokemonRepositoryのGetAllメソッドが期待通りに動作するか
+// PokemonRepositoryのGetAllメソッド（SELECT）が期待通りに動作するか
 func TestPokemonRepository_GetAll(t *testing.T) {
 	db, mock := setupMockDB(t)
 	repo := infrastructure.NewPokemonRepository(db)
@@ -54,4 +54,35 @@ func TestPokemonRepository_GetAll(t *testing.T) {
 	})
 }
 
-// TODO: Saveメソッド、Deleteメソッドのテスト
+// PokemonRepositoryのCreateメソッド（INSERT）が期待通りに動作するか
+func TestPokemonRepository_Create(t *testing.T) {
+	db, mock := setupMockDB(t)
+	repo := infrastructure.NewPokemonRepository(db)
+	// テストデータ
+	pokemon := model.Pokemon{ID: 1, Name: "bulbasaur", Height: 7, Weight: 69, BaseExperience: 64}
+	// 期待しているINSERT文が発行されたら成功
+	mock.ExpectBegin()
+	mock.ExpectExec("INSERT INTO `pokemons`").WillReturnResult(sqlmock.NewResult(1, 1))
+	mock.ExpectCommit()
+	err := repo.Create(pokemon)
+	assert.NoError(t, err)
+	assert.NoError(t, mock.ExpectationsWereMet())
+}
+
+// PokemonRepositoryのDeleteメソッド（DELETE）が期待通りに動作するか
+func TestPokemonRepository_Delete(t *testing.T) {
+	db, mock := setupMockDB(t)
+	repo := infrastructure.NewPokemonRepository(db)
+	sqlmock.NewRows([]string{"id", "name", "height", "weight", "base_experience"}).
+		AddRow(1, "bulbasaur", 7, 69, 64).
+		AddRow(2, "ivysaur", 10, 130, 142)
+	// 期待しているDELETE文が発行されたら成功
+	mock.ExpectBegin()
+	mock.ExpectExec("DELETE FROM `pokemons` WHERE `pokemons`.`id` = ?").
+		WithArgs(1).
+		WillReturnResult(sqlmock.NewResult(0, 1))
+	mock.ExpectCommit()
+	err := repo.Delete(1)
+	assert.NoError(t, err)
+	assert.NoError(t, mock.ExpectationsWereMet())
+}

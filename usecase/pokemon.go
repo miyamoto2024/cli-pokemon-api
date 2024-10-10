@@ -7,7 +7,7 @@ import (
 
 type PokemonDataOperationUsecaseInterface interface {
 	GetAllPokemons() ([]model.Pokemon, error)
-	SavePokemon(pokemon model.Pokemon) error
+	CreatePokemon(pokemon model.Pokemon) error
 	DeletePokemon(id int) error
 }
 type pokemonDataCRUDUsecase struct {
@@ -20,8 +20,8 @@ func NewPokemonDataOperationUsecase(repo repository.PokemonRepository) PokemonDa
 func (pu *pokemonDataCRUDUsecase) GetAllPokemons() ([]model.Pokemon, error) {
 	return pu.repo.GetAll()
 }
-func (pu *pokemonDataCRUDUsecase) SavePokemon(pokemon model.Pokemon) error {
-	return pu.repo.Save(pokemon)
+func (pu *pokemonDataCRUDUsecase) CreatePokemon(pokemon model.Pokemon) error {
+	return pu.repo.Create(pokemon)
 }
 func (pu *pokemonDataCRUDUsecase) DeletePokemon(id int) error {
 	return pu.repo.Delete(id)
